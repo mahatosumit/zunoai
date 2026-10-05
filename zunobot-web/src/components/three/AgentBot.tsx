@@ -11,6 +11,12 @@ export const GOLD_HI = "#f0d7a2";
 export const WHITE = "#f6f3ec";
 export const WHITE_D = "#e4dfd4";
 
+// A stable sequence keeps the particle field identical across React renders.
+// That avoids hydration surprises and lets the scene remain fully deterministic.
+function sample(index: number, channel: number) {
+  return ((index * 137 + channel * 59 + 17) % 997) / 997;
+}
+
 export function useEyeTexture() {
   return useMemo(() => {
     const c = document.createElement("canvas");
@@ -321,10 +327,10 @@ export function EmberField({ count = 90 }: { count?: number }) {
     const positions = new Float32Array(count * 3);
     const speeds = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 8;
-      positions[i * 3 + 1] = Math.random() * 5 - 1;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 5;
-      speeds[i] = 0.08 + Math.random() * 0.22;
+      positions[i * 3] = (sample(i, 0) - 0.5) * 8;
+      positions[i * 3 + 1] = sample(i, 1) * 5 - 1;
+      positions[i * 3 + 2] = (sample(i, 2) - 0.5) * 5;
+      speeds[i] = 0.08 + sample(i, 3) * 0.22;
     }
     return { positions, speeds };
   }, [count]);

@@ -40,6 +40,12 @@ const SCENARIOS: Scenario[] = [
   },
 ];
 
+const STATIC_MESSAGES: Msg[] = [
+  { id: 0, role: "bot", text: "Explainability console online. Ask me why I do anything." },
+  { id: 1, role: "user", text: SCENARIOS[0].q },
+  { id: 2, role: "bot", text: SCENARIOS[0].a },
+];
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Msg = { id: number; role: "user" | "bot"; text: string };
@@ -63,15 +69,7 @@ export default function ExplainConsole() {
 
   // typewriter loop
   useEffect(() => {
-    if (reduced) {
-      // static transcript for reduced motion
-      setMsgs([
-        { id: 0, role: "bot", text: "Explainability console online. Ask me why I do anything." },
-        { id: 1, role: "user", text: SCENARIOS[0].q },
-        { id: 2, role: "bot", text: SCENARIOS[0].a },
-      ]);
-      return;
-    }
+    if (reduced) return;
     let cancelled = false;
     (async () => {
       await sleep(1600);
@@ -132,6 +130,7 @@ export default function ExplainConsole() {
     [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60]
       .map((n) => String(n).padStart(2, "0"))
       .join(":");
+  const displayMsgs = reduced ? STATIC_MESSAGES : msgs;
 
   return (
     <section id="console" className="relative border-y border-white/[0.06] bg-ink-2 py-24 sm:py-32">
@@ -251,7 +250,7 @@ export default function ExplainConsole() {
               className="flex h-[400px] flex-col justify-end gap-4 overflow-y-auto p-6 sm:p-7"
               aria-live="polite"
             >
-              {msgs.map((m) =>
+              {displayMsgs.map((m) =>
                 m.role === "user" ? (
                   <div key={m.id} className="flex max-w-[85%] flex-row-reverse gap-3 self-end">
                     <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/15 bg-[#14100b] font-mono text-[9px] text-muted">
@@ -272,7 +271,7 @@ export default function ExplainConsole() {
                     </span>
                     <p className="rounded-2xl border border-ember/25 bg-gradient-to-b from-[#2b1a0b]/50 to-[#170e06]/50 px-4 py-3 text-[14.5px] leading-relaxed text-cream">
                       {m.text}
-                      {typing && m.id === msgs[msgs.length - 1]?.id && (
+                      {typing && m.id === displayMsgs[displayMsgs.length - 1]?.id && (
                         <span className="chat-cursor" />
                       )}
                     </p>

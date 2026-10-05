@@ -1,17 +1,28 @@
-# zunoai
+# ZunoAI / Agent AI
 
-Assistive AI robot project repository, featuring the official website, interactive 3D web experience, research paper, and design assets.
+Assistive AI research and product workspace. The repository includes the Agent AI marketing experience, Three.js scenes, product films, concept renders, QA captures, and the supporting ZUNOBOT research paper.
 
-## Project Structure
+## Project structure
 
-- **`zunobot-web/`**: Next.js 16 web application featuring Three.js 3D interactive visualizations, Motion animations, and Tailwind CSS.
-- **`ZUNOBOT  Paper for conference.docx`**: Research paper and documentation.
-- **`qa/`**: Visual QA and verification assets.
+- **`zunobot-web/`** — Next.js 16 App Router website using React 19, Motion, Three.js via react-three-fiber, Drei, and Phosphor icons.
+- **`zunobot-web/public/`** — local image and video assets used by the site.
+- **`ZUNOBOT  Paper for conference.docx`** — research and product documentation.
+- **`qa/`** — visual QA captures and reference frames from `ui design.mp4`.
 
-## Getting Started with Web App
+## Start the website
 
 ```bash
 cd zunobot-web
 npm install
 npm run dev
 ```
+
+Open `http://localhost:3000`. For a production check:
+
+```bash
+npm run lint
+npm run build
+npm start
+```
+
+The app is designed for preview hosting: it binds to `0.0.0.0` when launched with `npm run dev -- --hostname 0.0.0.0`, uses relative/local assets, and keeps WebGL and reduced-motion fallbacks in place.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { List, X, ArrowUpRight, CaretDown } from "@phosphor-icons/react";
 import { NAV } from "@/lib/content";
@@ -8,6 +8,15 @@ import { NAV } from "@/lib/content";
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
 
   return (
     <>
@@ -37,7 +46,12 @@ export default function Nav() {
                   onMouseEnter={() => setProducts(true)}
                   onMouseLeave={() => setProducts(false)}
                 >
-                  <button className="flex cursor-pointer items-center gap-1 rounded-full px-3.5 py-2 text-[13px] text-muted transition-colors duration-500 hover:text-cream">
+                  <button
+                    className="flex cursor-pointer items-center gap-1 rounded-full px-3.5 py-2 text-[13px] text-muted transition-colors duration-500 hover:text-cream"
+                    aria-haspopup="menu"
+                    aria-expanded={products}
+                    onFocus={() => setProducts(true)}
+                  >
                     {l.label}
                     <CaretDown size={11} />
                   </button>
@@ -92,6 +106,8 @@ export default function Nav() {
               onClick={() => setOpen(true)}
               className="grid size-10 cursor-pointer place-items-center rounded-full border border-white/12 lg:hidden"
               aria-label="Open menu"
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
             >
               <List size={18} />
             </button>
@@ -100,6 +116,10 @@ export default function Nav() {
       </header>
 
       <div
+        id="mobile-navigation"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile navigation"
         className={`fixed inset-0 z-[60] flex flex-col items-center justify-center gap-1 bg-black/90 backdrop-blur-3xl transition-opacity duration-500 lg:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}

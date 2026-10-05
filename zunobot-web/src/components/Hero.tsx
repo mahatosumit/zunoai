@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -29,15 +30,20 @@ const HUD = [
 export default function Hero() {
   const reduced = useReducedMotion();
   const [step, setStep] = useState(0);
-  const [webgl, setWebgl] = useState(true);
+  const [webgl, setWebgl] = useState<boolean | null>(null);
 
+  // Keep a real image fallback for browsers that block WebGL. The check runs
+  // after paint so the hero never delays its first meaningful content.
   useEffect(() => {
-    try {
-      const c = document.createElement("canvas");
-      setWebgl(!!(c.getContext("webgl2") || c.getContext("webgl")));
-    } catch {
-      setWebgl(false);
-    }
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        const canvas = document.createElement("canvas");
+        setWebgl(Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl")));
+      } catch {
+        setWebgl(false);
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -106,7 +112,20 @@ export default function Hero() {
           transition={{ duration: 1.1, ease, delay: 0.2 }}
           className="relative h-[420px] sm:h-[540px] lg:h-[calc(100dvh-10rem)]"
         >
-          {webgl ? <HeroScene /> : null}
+          {webgl === false ? (
+            <div className="absolute inset-0">
+              <Image
+                src="/images/hero-robot.png"
+                alt="Agent AI robot visualization"
+                fill
+                sizes="(max-width: 1024px) 100vw, 58vw"
+                className="object-contain object-center"
+                priority
+              />
+            </div>
+          ) : (
+            <HeroScene />
+          )}
           {HUD.map((h, i) => (
             <motion.div
               key={h.k}

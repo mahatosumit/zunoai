@@ -7,10 +7,22 @@ import Reveal from "./Reveal";
 
 const HeadScene = dynamic(() => import("@/components/three/HeadScene"), { ssr: false });
 
-const POINTS = [
-  { icon: Brain, title: "An agent that remembers." },
-  { icon: Brain, title: "A system that reasons." },
-  { icon: ShieldCheck, title: "A partner that acts." },
+const MODES = [
+  {
+    title: "A little initiative. A lot more possible.",
+    body: "Start with a signal, a question, or a half-formed idea. Agent AI keeps the context intact and helps you find the next useful move.",
+    points: ["An agent that remembers.", "A system that reasons.", "A partner that acts."],
+  },
+  {
+    title: "From a blank page to a clear direction.",
+    body: "Give the system an outcome, not a perfect prompt. It turns scattered inputs into a plan you can review, refine, and ship.",
+    points: ["A brief that takes shape.", "A plan you can inspect.", "A result you can own."],
+  },
+  {
+    title: "One intention. Every tool in reach.",
+    body: "Your agent coordinates the specialists and connected tools needed to move work forward, while approval stays with you.",
+    points: ["Specialists that collaborate.", "Tools that stay in context.", "People in control."],
+  },
 ];
 
 export default function Initiative() {
@@ -41,21 +53,27 @@ export default function Initiative() {
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr_0.9fr]">
           <Reveal>
             <h2 className="max-w-[12ch] text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-              A little initiative. A lot more possible.
+              {MODES[tab].title}
             </h2>
+            <p className="mt-5 max-w-[34ch] text-sm leading-relaxed text-muted">
+              {MODES[tab].body}
+            </p>
           </Reveal>
           <div className="relative h-[340px] sm:h-[420px]">
             <HeadScene />
           </div>
           <Reveal delay={0.1} className="space-y-5">
-            {POINTS.map((p) => (
-              <div key={p.title} className="flex items-center gap-3">
-                <span className="grid size-9 place-items-center rounded-xl border border-white/10 text-ember-2">
-                  <p.icon size={16} weight="light" />
-                </span>
-                <p className="text-[15px]">{p.title}</p>
-              </div>
-            ))}
+            {MODES[tab].points.map((point, i) => {
+              const Icon = i === 2 ? ShieldCheck : Brain;
+              return (
+                <div key={point} className="flex items-center gap-3">
+                  <span className="grid size-9 place-items-center rounded-xl border border-white/10 text-ember-2">
+                    <Icon size={16} weight="light" />
+                  </span>
+                  <p className="text-[15px]">{point}</p>
+                </div>
+              );
+            })}
           </Reveal>
         </div>
 

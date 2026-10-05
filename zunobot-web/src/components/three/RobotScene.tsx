@@ -21,6 +21,10 @@ const TEAL = "#3ee6cf";
 const BLUE = "#3b7be8";
 const YELLOW = "#f2c744";
 
+function sample(index: number, channel: number) {
+  return ((index * 137 + channel * 59 + 17) % 997) / 997;
+}
+
 function Eye({ x }: { x: number }) {
   // local +Y points out of the face after the group's X rotation
   return (
@@ -225,10 +229,10 @@ function Embers({ count = 130 }: { count?: number }) {
     const positions = new Float32Array(count * 3);
     const speeds = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 7;
-      positions[i * 3 + 1] = Math.random() * 5 - 1;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 4 - 0.5;
-      speeds[i] = 0.12 + Math.random() * 0.3;
+      positions[i * 3] = (sample(i, 0) - 0.5) * 7;
+      positions[i * 3 + 1] = sample(i, 1) * 5 - 1;
+      positions[i * 3 + 2] = (sample(i, 2) - 0.5) * 4 - 0.5;
+      speeds[i] = 0.12 + sample(i, 3) * 0.3;
     }
     return { positions, speeds };
   }, [count]);
@@ -262,8 +266,6 @@ function Embers({ count = 130 }: { count?: number }) {
 }
 
 export default function RobotScene() {
-  const reduced = useReducedMotion();
-
   return (
     <Canvas
       dpr={[1, 1.75]}

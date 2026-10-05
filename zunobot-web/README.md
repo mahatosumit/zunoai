@@ -1,67 +1,39 @@
-# ZUNOBOT Website
+# Agent AI marketing site
 
-Marketing site for ZUNOBOT, a modular and explainable assistive robot for
-personal care. Built with Next.js 16 (App Router), Tailwind CSS v4,
-Three.js via react-three-fiber, Motion, and Phosphor icons.
+A production-ready, motion-led landing page for Agent AI: a coordinated system of specialist agents that understands context, reasons over work, and turns intent into action. The visual language follows `../ui design.mp4` — near-black surfaces, warm cream typography, ember accents, glassy navigation, and responsive 3D scenes.
 
-## Run
+## Run locally
 
 ```bash
 npm install
-npm run dev      # development at http://localhost:3000
+npm run dev      # http://localhost:3000
 ```
+
+Production verification:
 
 ```bash
+npm run lint
 npm run build
-npm start        # production server
+npm start
 ```
 
-Note: this project pins `allow-scripts` in `.npmrc` (required by npm 11+
-postinstall policy on this machine). Do not remove it.
+The project pins `allow-scripts` in `.npmrc` for npm 11+ postinstall policy on this machine. Keep that setting in place.
 
-## Structure
+## Experience map
 
-```
-src/
-  app/
-    layout.tsx          fonts (Space Grotesk + JetBrains Mono), metadata
-    page.tsx            section composition
-    globals.css         design tokens (@theme), primitives, keyframes
-  components/
-    Nav.tsx             floating pill nav, reading progress bar, mobile menu
-    Hero.tsx            split hero with lazy-loaded 3D scene + step strip
-    Chapters.tsx        sticky-stack narrative cards with pointer 3D tilt
-    System.tsx          L1-L4 architecture tabs + node map (SVG wires)
-    Hardware.tsx        front/side/rear concept renders, auto-cycling gallery
-    ExplainConsole.tsx  live HMI mock: diagnostics, state ring, typewriter chat
-    Showreel.tsx        product vision film, scroll parallax + play control
-    BuiltWith.tsx       infinite tech marquee (pauses on hover)
-    Together.tsx        care-network split with 3D orbit scene
-    Compare.tsx         comparison table (shimmer row) + count-up stats
-    Footer.tsx          reservation CTA + footer
-    three/
-      RobotScene.tsx    3D ZUNOBOT (white/blue/teal, matches the product film)
-      NetworkOrbit.tsx  3D care-network orbit for the Together section
-```
+- `src/app/page.tsx` composes the page: hero, initiative, agents, stories, ecosystem, pricing, collective, and footer.
+- `src/components/Nav.tsx` provides the desktop glass nav, product menu, announcement rail, and mobile menu.
+- `src/components/Hero.tsx` combines the animated headline, capability HUD, step rail, and the main Three.js robot scene.
+- `src/components/Agents.tsx` is the specialist-agent switcher with a live 3D icon stage.
+- `src/components/Ecosystem.tsx` and `src/components/three/*` power the interactive architecture map and orbit scenes.
+- `src/components/ExplainConsole.tsx` is a reusable explainability/HMI surface with a reduced-motion transcript fallback.
+- `src/app/globals.css` contains the design tokens, motion primitives, grain treatment, responsive styles, and accessibility fallbacks.
 
-## Media
+## Production notes
 
-- `public/videos/product-film.mp4` is the team's ZUNOBOT vision film
-  (`zunobot.mp4` in the workspace), with `product-film-poster.jpg` as its
-  poster frame.
-- `public/images/robot-{front,side,rear}.jpg` are the concept renders of
-  the full-scale unit (shown in the Hardware section).
-- Other renders in `public/images/*.png` were extracted from the team's
-  design-reference material.
-- The two animated visuals are live react-three-fiber scenes: the robot in
-  the hero (recolorable to track the product design) and the care-network
-  orbit. Both lazy-load, both fall back to a static render when WebGL is
-  unavailable, and both honor `prefers-reduced-motion`.
-
-## Design system
-
-- Ink `#070503` / panel `#0e0b08` / cream `#f2ece2`
-- Single accent: ember `#ff7a1c`
-- Radius rule: cards 16px, panels 24px, tiles 14px, buttons pill
-- Type: Space Grotesk display + JetBrains Mono for labels/numbers
-- All motion honors `prefers-reduced-motion`
+- Three.js scenes are dynamically imported with SSR disabled, so the server-rendered page remains fast and deterministic.
+- The hero checks for WebGL after first paint and falls back to `/images/hero-robot.png` when the browser cannot create a context.
+- Particle fields use deterministic sequences rather than `Math.random()` during render, avoiding hydration drift.
+- `prefers-reduced-motion` disables decorative loops and swaps the console to a static transcript.
+- Fonts intentionally use a local system stack so `next build` does not depend on Google Fonts being reachable at build time.
+- Video and image assets are local, served from `public/`, and use responsive `next/image` sizing where applicable.

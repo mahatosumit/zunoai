@@ -13,8 +13,8 @@
   --color-ember-2: #ffb066;
   --color-gold: #c9a36a;
 
-  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-display: "Avenir Next", "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", ui-monospace, monospace;
 
   --animate-marquee: marquee 36s linear infinite;
 }
